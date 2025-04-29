@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Posts</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Lista de Posts</h1>
+        <button class="btn btn-primary" id="btn-novo-post">Criar Novo Post</button>
+    </div>
+    <!-- Os posts serão injetados aqui via JavaScript -->
+    <div id="posts-container"></div>
+</div>
+
+<script>
+// Função para buscar os posts do localStorage
+function getPosts() {
+    const posts = localStorage.getItem('posts');
+    return posts ? JSON.parse(posts) : [];
+}
+
+// Função para renderizar os posts na página
+function renderPosts() {
+    const posts = getPosts();
+   ElementById('posts-container');
+    
+    // Limpa o container antes de renderizar os novos posts
+    postsContainer.innerHTML = '';
+
+   if (posts.length === 0) {
+        const noPostMessage = document.createElement('p');
+        noPostMessage.classList.add('text-muted');
+        noPostMessage.textContent = 'Nenhum post encontrado.';
+        postsContainer.appendChild(noPostMessage);
+   } else {
+       // Renderiza cada post na página
+       for (const post of posts) {
+           const postElement = document.createElement('div');
+           postElement.classList.add('list-group-item', 'list-group-item-action');
+
+           const postTitle = document.createElement('h5');
+           postTitle.classList.add('mb-1');
+           postTitle.textContent = post.title;
+
+           const postContent = document.createElement('p');
+           postContent.classList.add('mb-1', 'text-truncate'); // Trunca o texto longo
+
+            // Exibe apenas um trecho do conteúdo do post
+            if (post.content.length > 100) {
+                postContent.textContent = `${post.content.substring(0, 100)}...`;
+            } else {
+                postContent.textContent = post.content;
+            }
+            postElement.appendChild(postTitle);
+            postElement.appendChild(postContent);
+            postsContainer.appendChild(postElement);
+        }
+    }
+}
+
+// Chama a função para renderizar os posts ao carregar a página
+document.addEventListener('DOMContentLoaded', renderPosts);
+</script>
+</body>
+</html>
